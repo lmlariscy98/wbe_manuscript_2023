@@ -1,0 +1,49 @@
+Parameter,Target,Scale,rho,CI_low,CI_high,p,n_Obs,Sig
+Concentration,N1&N2,County,0.74,0.62,0.83,0,85,***
+Concentration,N1,County,0.75,0.64,0.83,0,85,***
+Concentration,N2,County,0.7,0.56,0.8,0,83,***
+Recovery-Adjusted Viral Load,N1,County,0.21,-0.1,0.48,1,45,
+Recovery-Adjusted Viral Load,N2,County,0.09,-0.22,0.39,1,44,
+Recovery-Adjusted Viral Load,N1&N2,County,0.22,-0.08,0.49,1,45,
+Sample Positivity,N1,County,0.82,0.73,0.88,0,85,***
+Sample Positivity,N2,County,0.73,0.6,0.82,0,83,***
+Sample Positivity,N1&N2,County,0.82,0.74,0.88,0,85,***
+Viral Load,N1&N2,County,0.7,0.57,0.8,0,83,***
+Viral Load,N1,County,0.71,0.58,0.8,0,83,***
+Viral Load,N2,County,0.63,0.48,0.75,0,83,***
+Concentration,N1&N2,WRF A,0.67,0.53,0.78,0,85,***
+Concentration,N1,WRF A,0.68,0.54,0.78,0,85,***
+Concentration,N2,WRF A,0.58,0.41,0.71,0,83,***
+Recovery-Adjusted Viral Load,N1,WRF A,0.34,0.08,0.55,1,59,
+Recovery-Adjusted Viral Load,N2,WRF A,0.24,-0.03,0.48,1,58,
+Recovery-Adjusted Viral Load,N1&N2,WRF A,0.35,0.09,0.56,1,59,
+Sample Positivity,N1,WRF A,0.68,0.54,0.78,0,85,***
+Sample Positivity,N2,WRF A,0.58,0.41,0.71,0,83,***
+Sample Positivity,N1&N2,WRF A,0.72,0.59,0.81,0,85,***
+Viral Load,N1&N2,WRF A,0.59,0.42,0.71,0,85,***
+Viral Load,N1,WRF A,0.62,0.47,0.74,0,85,***
+Viral Load,N2,WRF A,0.51,0.32,0.65,0.01,83,**
+Concentration,N1&N2,WRF B,0.59,0.43,0.72,0,85,***
+Concentration,N1,WRF B,0.61,0.45,0.73,0,85,***
+Concentration,N2,WRF B,0.55,0.38,0.69,0,83,***
+Recovery-Adjusted Viral Load,N1,WRF B,0.11,-0.16,0.37,1,58,
+Recovery-Adjusted Viral Load,N2,WRF B,0.14,-0.13,0.39,1,57,
+Recovery-Adjusted Viral Load,N1&N2,WRF B,0.13,-0.14,0.38,1,58,
+Sample Positivity,N1,WRF B,0.63,0.47,0.74,0,85,***
+Sample Positivity,N2,WRF B,0.55,0.37,0.69,0,83,***
+Sample Positivity,N1&N2,WRF B,0.65,0.51,0.76,0,85,***
+Viral Load,N1&N2,WRF B,0.59,0.43,0.72,0,85,***
+Viral Load,N1,WRF B,0.62,0.46,0.74,0,85,***
+Viral Load,N2,WRF B,0.57,0.4,0.71,0,83,***
+Concentration,N1&N2,WRF C,0.64,0.49,0.76,0,84,***
+Concentration,N1,WRF C,0.58,0.41,0.71,0,84,***
+Concentration,N2,WRF C,0.53,0.35,0.68,0,82,***
+Recovery-Adjusted Viral Load,N1,WRF C,-0.1,-0.39,0.2,1,46,
+Recovery-Adjusted Viral Load,N2,WRF C,-0.03,-0.33,0.27,1,45,
+Recovery-Adjusted Viral Load,N1&N2,WRF C,-0.06,-0.35,0.24,1,46,
+Sample Positivity,N1,WRF C,0.61,0.45,0.73,0,84,***
+Sample Positivity,N2,WRF C,0.54,0.37,0.68,0,82,***
+Sample Positivity,N1&N2,WRF C,0.68,0.54,0.78,0,84,***
+Viral Load,N1&N2,WRF C,0.5,0.31,0.65,0.01,84,**
+Viral Load,N1,WRF C,0.45,0.25,0.61,0.12,84,
+Viral Load,N2,WRF C,0.47,0.28,0.63,0.05,82,*
