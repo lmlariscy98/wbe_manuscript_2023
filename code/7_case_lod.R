@@ -6,6 +6,7 @@ library(reshape2)
 library(ggpubr)
 library(magrittr)
 library(ggpmisc)
+library(ggstatsplot)
 
 
 #Load data 
@@ -38,7 +39,7 @@ my.data %>%
                label = "3 days") + 
   xlab("Date") + 
   ylab("Cases (7dma per 100k)") + 
-  theme_classic()
+  theme_ggstatsplot()
 
 
 
@@ -62,17 +63,23 @@ my.data %>%
 
 
 #County-Level Data
-my.data %>% 
-  ggplot(aes(y = log10(cases.reported.7dma.100k), x = p.pos.br_Total)) +
+fig4 = my.data %>% 
+  ggplot(aes(y = log10(cases.reported.7dma.100k), x = p.pos.br_Total*100)) +
   stat_poly_line(se= TRUE, color = "blue") +
   stat_poly_eq(aes(label = paste(after_stat(eq.label),
                                  after_stat(rr.label), sep = "*\", \"*"))) +
   geom_point() + 
-  xlab("N1 & N2 Assay Positivity (%)") + 
+  xlab("Total Assay Positivity (%)") + 
   ylab("Log10(Cases Reported)") + 
   ggtitle("Athens-Clarke County") + 
-  theme_classic()  + 
+  theme_ggstatsplot() + 
   theme(plot.title = element_text(hjust = 0.5)) 
+
+
+#tiff('./figures/fig4.tiff', units="in", width = 7, height = 5, res=600, compression = 'lzw', pointsize = 12)
+plot(fig4)
+#dev.off()
+
 
 
 

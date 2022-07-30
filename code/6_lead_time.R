@@ -80,77 +80,41 @@ p.pos.ave$target = "N1 & N2 Assay Positivity"
 
 copies.cors.all = rbind(copies.n1, copies.n2, copies.ave, p.pos.ave)
 
+copies.cors.all$target = factor(copies.cors.all$target, 
+                                levels=c('N1 Viral Load', 
+                                         'N2 Viral Load', 
+                                         'Avg Viral Load', 
+                                         'N1 & N2 Assay Positivity'))
 
 
-n1 = copies.cors.all %>% select(lag, target, cases.reported.7dma.100k) %>%
-  filter(target == "N1 Viral Load") %>%
+
+copies.cors.all %>% 
   mutate(lag_corrected = -lag) %>%
-  ggplot(aes(x = target, y = lag_corrected, fill= cases.reported.7dma.100k)) + 
-  geom_tile(color = "black") + 
-  scale_fill_viridis() + 
-  theme_classic() +
-  xlab("") + 
-  ylab("Lag (Days)       |     Lead (Days)") + 
-  labs(fill = "Correlation Coefficient") + 
-  geom_text(aes(x = target, y = lag_corrected, label = round(cases.reported.7dma.100k, 3))) +
-  scale_y_continuous(breaks = seq(-6, 6, 1), limits = c(-6.5,6.5))
+  ggplot(aes(x = lag_corrected, y = cases.reported.7dma.100k, color = target)) + 
+  geom_point() + 
+  geom_line() + 
+  scale_color_viridis(discrete = TRUE) + 
+  theme_bw() + 
+  ylab("Spearman's Rho") +
+  labs(color = "Wastewater Measure") + 
+  xlab("  Lag (Days) | Lead (Days)") 
 
 
-
-
-n2 = copies.cors.all %>% select(lag, target, cases.reported.7dma.100k) %>%
-  filter(target == "N2 Viral Load") %>%
+lead_lag = copies.cors.all %>% 
   mutate(lag_corrected = -lag) %>%
-  ggplot(aes(x = target, y = lag_corrected, fill= cases.reported.7dma.100k)) + 
-  geom_tile(color = "black") + 
-  scale_fill_viridis() + 
-  theme_classic() +
-  xlab("") + 
-  ylab("Lag (Days)       |     Lead (Days)") + 
-  labs(fill = "Correlation Coefficient") + 
-  geom_text(aes(x = target, y = lag_corrected, label = round(cases.reported.7dma.100k, 3))) +
-  scale_y_continuous(breaks = seq(-6, 6, 1), limits = c(-6.5,6.5))
+  ggplot(aes(x = lag_corrected, y = cases.reported.7dma.100k, color = target)) + 
+  geom_point() + 
+  geom_line() + 
+  scale_color_viridis(discrete = TRUE) + 
+  theme_bw() + 
+  ylab("Spearman's Rho") +
+  labs(color = "Wastewater Measure") + 
+  xlab("  Lag (Days) | Lead (Days)") + 
+  ylim(0,1)
+  
 
 
-
-
-avg = copies.cors.all %>% select(lag, target, cases.reported.7dma.100k) %>%
-  filter(target == "Avg Viral Load") %>%
-  mutate(lag_corrected = -lag) %>%
-  ggplot(aes(x = target, y = lag_corrected, fill= cases.reported.7dma.100k)) + 
-  geom_tile(color = "black") + 
-  scale_fill_viridis() + 
-  theme_classic() +
-  xlab("") + 
-  ylab("Lag (Days)       |     Lead (Days)") + 
-  labs(fill = "Correlation Coefficient") + 
-  geom_text(aes(x = target, y = lag_corrected, label = round(cases.reported.7dma.100k, 3))) +
-  scale_y_continuous(breaks = seq(-6, 6, 1), limits = c(-6.5,6.5))
-
-
-pos = copies.cors.all %>% select(lag, target, cases.reported.7dma.100k) %>%
-  filter(target == "N1 & N2 Assay Positivity") %>%
-  mutate(lag_corrected = -lag) %>%
-  ggplot(aes(x = target, y = lag_corrected, fill= cases.reported.7dma.100k)) + 
-  geom_tile(color = "black") + 
-  scale_fill_viridis() + 
-  theme_classic() +
-  xlab("") + 
-  ylab("Lag (Days)       |     Lead (Days)") + 
-  labs(fill = "Correlation Coefficient") + 
-  geom_text(aes(x = target, y = lag_corrected, label = round(cases.reported.7dma.100k, 3))) +
-  scale_y_continuous(breaks = seq(-6, 6, 1), limits = c(-6.5,6.5))
-
-
-lead_lag = ggarrange(n1 + rremove("legend"), 
-                 n2 + rremove("legend") + rremove("ylab") + rremove("y.axis") + rremove("y.text") + rremove("y.ticks"), 
-                 avg + rremove("legend")  + rremove("ylab") + rremove("y.axis") + rremove("y.text") + rremove("y.ticks"), 
-                 pos + rremove("legend") + rremove("ylab") + rremove("y.axis") + rremove("y.text") + rremove("y.ticks"), 
-                 nrow = 1, 
-                 widths = c(1.2, 1, 1, 1))
-
-
-#tiff('./figures/lead_lag.tiff', units="in", width = 6, height = 6, res=600, compression = 'lzw', pointsize = 12)
+tiff('./figures/lead_lag.tiff', units="in", width = 6, height = 4, res=600, compression = 'lzw', pointsize = 12)
 plot(lead_lag)
-#dev.off()
+dev.off()
 

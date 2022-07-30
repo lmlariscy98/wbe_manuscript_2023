@@ -266,7 +266,7 @@ qqnorm.ct.n1 <- qqnorm.Explorer.ct(qqnorm.ct.n1)
 qqnorm.ct.n2 <- qqnorm.Explorer.ct(qqnorm.ct.n2)
 
 
-#png(filename = "./figures/detection_limits.png", height = 9, width = 8, units = "in", res = 600)
+#tiff(filename = "./figures/detection_limits.tiff", height = 9, width = 8, units = "in", res = 600)
 
 
 par(mfcol = c(2,1), mar = c(2.1, 2.1, 1.1, 0))
@@ -302,7 +302,7 @@ axis(1, at = -3:3, tick = T, labels = T, cex.axis = 0.7, line = 0, padj = -1.75,
 title(xlab = "Theoretical Quantiles", line = 1)
 
 axis(2, at = 33:39, tick = T, labels = T, cex.axis = 0.7, line = 0, hadj = 0.25, tck = -0.0125, las = 1)
-title(ylab = "Observed Cycle Thresholds", line = 1.25)
+title(ylab = "Observed Cq Values", line = 1.25)
 
 
 abline(h = qqnorm.ct.n2$lod)
@@ -547,7 +547,7 @@ target_plot_1 = copy.profiles %>%
     y = copies_L,
     type = "np",	
     xlab = "Target", 
-    ylab = "cp/L")
+    ylab = "Concentration (cp/L)")
 
 
 copy.profiles %>% 
@@ -562,7 +562,7 @@ copy.profiles %>%
     grouping.var = target,
     type = "np",	
     xlab = "WRF", 
-    ylab = "cp/L", 
+    ylab = "Concentration (cp/L)", 
     plotgrid.args = list(nrow = 2))
 
 
@@ -645,7 +645,8 @@ wrf_target_plot_1 = copies.plant.target %>%
     ylab = "Concentration (cp/L)", 
     plotgrid.args = list(nrow = 1), 
     ggplot.component =
-      list(scale_color_manual(values = paletteer::paletteer_c("viridis::viridis", 3)))) +
+      list(scale_color_manual(values = paletteer::paletteer_c("viridis::viridis", 3))), 
+    results.subtitle = FALSE) +
     labs(caption = NULL)# remove caption
 
 wrf_target_plot_2 = copies.plant.target %>% 
@@ -655,10 +656,11 @@ wrf_target_plot_2 = copies.plant.target %>%
     grouping.var = target, 
     type = "np",
     xlab = "WRF", 
-    ylab = "Total Copies", 
+    ylab = "Viral Load (cp/day)", 
     plotgrid.args = list(nrow = 1), 
     ggplot.component =
-      list(scale_color_manual(values = paletteer::paletteer_c("viridis::viridis", 3)))) + 
+      list(scale_color_manual(values = paletteer::paletteer_c("viridis::viridis", 3))), 
+    results.subtitle = FALSE) + 
     labs(caption = NULL) # remove caption
 
 target_plot_3 = copies.plant.target %>% 
@@ -667,7 +669,7 @@ target_plot_3 = copies.plant.target %>%
     y = copies,
     type = "np",
     xlab = "Target", 
-    ylab = "Total Copies")
+    ylab = "Viral Load (cp/day)")
 
 
 target_plot_4 = copies.plant.target %>% 
@@ -676,37 +678,52 @@ target_plot_4 = copies.plant.target %>%
     x = N1, 
     y = N2,
     type = "np",
-    xlab = "N1 Total Copies", 
-    ylab = "N2 Total Copies", 
+    xlab = "N1 Viral Load (cp/day)", 
+    ylab = "N2 Viral Load (cp/day)", 
     marginal = FALSE)
 
 
-target_plot = ggarrange(target_plot_1, 
-                        target_plot_2,
-                        target_plot_3, 
-                        target_plot_4, 
-                        ncol = 2, 
-                        nrow = 2, 
-                        heights = c(0.5, 0.5), 
-                        widths = c(0.5, 0.5),
-                        labels = c("A", "B", "C", "D"))
+concentration_target_plot = ggarrange(target_plot_1, target_plot_2, 
+                                      ncol = 1, 
+                                      labels = c("A", "B"))
 
-
-#tiff('./figures/target_plot.tiff', units="in", width = 12, height = 8, res=600, compression = 'lzw', pointsize = 12)
-plot(target_plot)
+#tiff('./figures/concentration_target_plot.tiff', units="in", width = 6, height = 6, res=600, compression = 'lzw', pointsize = 12)
+plot(concentration_target_plot)
 #dev.off()
+
+
+viral_load_target_plot = ggarrange(target_plot_1, 
+                                   target_plot_2, 
+                                   ncol = 1,  
+                                   labels = c("A", "B"))
+                              
+#tiff('./figures/viral_load_target_plot.tiff', units="in", width = 6, height = 6, res=600, compression = 'lzw', pointsize = 12)
+plot(viral_load_target_plot)
+#dev.off()
+
 
 
 
 wrf_target_plot = ggarrange(wrf_target_plot_1, 
-                            wrf_target_plot_2, ncol = 1,  
-                            labels = c("A", "B"))
+                            wrf_target_plot_2, 
+                            ncol = 1,  
+                            heights = c(1,1.5),
+                            labels = c("A", "B", "C", "D"))
 
 
-#tiff('./figures/wrf_target_plot.tiff', units="in", width = 12, height = 9, res=600, compression = 'lzw', pointsize = 12)
-plot(wrf_target_plot)
+#tiff('./figures/concentration_wrf_target_plot.tiff', units="in", width = 8, height = 4, res=600, compression = 'lzw', pointsize = 12)
+plot(wrf_target_plot_1)
 #dev.off()
 
+
+#tiff('./figures/viral_load_wrf_target_plot.tiff', units="in", width = 8, height = 5, res=600, compression = 'lzw', pointsize = 12)
+plot(wrf_target_plot_2)
+#dev.off()
+
+
+#tiff('./figures/wrf_target_plot.tiff', units="in", width = 8, height = 8.2, res=600, compression = 'lzw', pointsize = 12)
+plot(wrf_target_plot)
+#dev.off()
 
 #Create the final "my.data" data set by combining all data
 

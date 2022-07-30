@@ -255,18 +255,9 @@ recovery_plot_1 = recovery_calc %>%
            label = paste("Median = ", round(median(recovery_calc$percent_recovery),2))) + 
   annotate("text", x = median(recovery_calc$percent_recovery), y = 36, 
            label = "N = 165") + 
-  xlab("Recovery of BCoV (%)") + 
+  xlab("BCoV Recovery (%)") + 
   ylab("Count") + 
   theme_ggstatsplot()
-
-
-recovery_calc %>% 
-  gghistostats(
-  x = percent_recovery, 
-  xlab = "Recovery (%)", 
-  title = "Recovery of BCoV", 
-  type = "np"
-)
 
 
 recovery_plot_2 = recovery_calc %>% 
@@ -276,7 +267,7 @@ recovery_plot_2 = recovery_calc %>%
     type = "np",	
     pairwise.display = "all", 
     xlab = "WRF", 
-    ylab = "Percent Recovery", 
+    ylab = "BCoV Recovery (%)", 
     results.subtitle	= FALSE, 
     ggplot.component =
       list(scale_color_manual(values = paletteer::paletteer_c("viridis::viridis", 3))))
@@ -343,7 +334,8 @@ plant_data %>%
   facet_wrap(~wrf)
 
 
-#Does influent flow dilute the sample? Is there a negative correlation between flow and TSS?
+#Does influent flow dilute the sample? 
+#Is there a negative correlation between flow and TSS?
 plant_data %>% ggplot(aes(x = influent_flow_L, y = influent_tss_mg_l, color = wrf)) + 
   geom_point() + 
   stat_cor(method ="spearman")
@@ -353,7 +345,8 @@ plant_data %>% ggplot(aes(x = influent_flow_L, y = influent_tss_mg_l, color = wr
 
 #Are there correlations between recovery and plant data?
 recovery_calc = left_join(recovery_calc, sample_data) 
-recovery_calc = left_join(recovery_calc, plant_data) 
+recovery_calc = left_join(recovery_calc, plant_data)
+
 
 
 recovery_plot_3 = recovery_calc %>% 
@@ -370,7 +363,7 @@ recovery_plot_4 = recovery_calc %>%
   ggplot(aes(x = influent_tss_mg_l, y = percent_recovery, color = wrf)) + 
   geom_point() + 
   stat_cor(method = "spearman") + 
-  ylab("") +
+  ylab("BCoV Recovery (%)") +
   xlab("Total Suspended Solids (mg/L)") + 
   theme_ggstatsplot() + 
   labs(color="WRF") 
@@ -387,9 +380,9 @@ recovery_plot = ggarrange(recovery_plot_1,
 
 
 
-tiff('./figures/recovery.tiff', units="in", width = 9, height = 8, res=600, compression = 'lzw', pointsize = 12)
+#tiff('./figures/recovery.tiff', units="in", width = 9, height = 8, res=600, compression = 'lzw', pointsize = 12)
 plot(recovery_plot)
-dev.off()
+#dev.off()
 
 
 

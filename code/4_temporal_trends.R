@@ -23,7 +23,7 @@ fig1a_top = my.data %>%
   geom_line(aes(x = sample_date, y = cases.reported.7dma.100k), size = 1.5) + 
   xlab("Date") + 
   ylab("Cases") + 
-  theme_classic2() + 
+  theme_ggstatsplot() + 
   ylim(0,130) + 
   ggtitle("Athens-Clarke County") + 
   theme(plot.title = element_text(hjust = 0.5))
@@ -61,14 +61,13 @@ fig1a_bottom = my.data %>%
   xlab("Date") + 
   ylab("Viral Load") + 
   scale_color_manual(values = c("#440154FF", "#ffcf20FF", "#2f9aa0FF")) + 
-  theme_classic2() + 
+  theme_ggstatsplot() + 
   ggtitle("") +
   labs(color = "Target") +
   labs(shape = "Below LoD") +
   theme(legend.position = "bottom") + 
   theme(axis.text.x = element_text(angle=60, hjust = 1)) 
   
-
 
 
 ###Figure 1B - WRF A###
@@ -81,7 +80,7 @@ fig1b_top = my.data %>%
   geom_line(aes(x = sample_date, y = cases.7dma.100k_A), size = 1.5) + 
   xlab("Date") + 
   ylab("Cases") + 
-  theme_classic2() + 
+  theme_ggstatsplot() + 
   ylim(0,130) + 
   ggtitle("WRF A") + 
   theme(plot.title = element_text(hjust = 0.5))
@@ -121,7 +120,7 @@ fig1b_bottom = my.data %>%
   xlab("Date") + 
   ylab("Viral Load") + 
   scale_color_manual(values = c("#440154FF", "#ffcf20FF", "#2f9aa0FF")) + 
-  theme_classic2()  +
+  theme_ggstatsplot()  +
   labs(color = "Target") +
   labs(shape = "Below LoD") +
   theme(legend.position = "bottom")  + 
@@ -141,7 +140,7 @@ fig1c_top = my.data %>%
   geom_line(aes(x = sample_date, y = cases.7dma.100k_B), size = 1.5) + 
   xlab("Date") + 
   ylab("Cases") + 
-  theme_classic2() + 
+  theme_ggstatsplot() + 
   ylim(0,130) + 
   ggtitle("WRF B") + 
   theme(plot.title = element_text(hjust = 0.5))
@@ -181,7 +180,7 @@ fig1c_bottom = my.data %>%
   xlab("Date") + 
   ylab("Viral Load") + 
   scale_color_manual(values = c("#440154FF", "#ffcf20FF", "#2f9aa0FF")) + 
-  theme_classic2() +
+  theme_ggstatsplot() +
   labs(color = "Target") +
   labs(shape = "Below LoD") +
   theme(legend.position = "bottom")  + 
@@ -201,7 +200,7 @@ fig1d_top = my.data %>%
   geom_line(aes(x = sample_date, y = cases.7dma.100k_C), size = 1.5) + 
   xlab("Date") + 
   ylab("Cases") + 
-  theme_classic2() + 
+  theme_ggstatsplot() + 
   ylim(0,130) + 
   ggtitle("WRF C") + 
   theme(plot.title = element_text(hjust = 0.5))
@@ -241,7 +240,7 @@ fig1d_bottom = my.data %>%
   xlab("Date") + 
   ylab("Viral Load") + 
   scale_color_manual(values = c("#440154FF", "#ffcf20FF", "#2f9aa0FF")) + 
-  theme_classic2()  +
+  theme_ggstatsplot()  +
   labs(color = "Target") +
   labs(shape = "Below LoD") +
   theme(legend.position = "bottom")  +
@@ -267,11 +266,9 @@ fig1 = ggarrange(fig1a_top + rremove("xlab") + rremove("x.axis") + rremove("x.ti
                  align = "v", 
                  labels = c("A", "B", "", "", "C", "D", "", ""))
 
-tiff('test.tiff', units="in", width=9, height=6.5, res=600, compression = 'lzw')
+#tiff('./figures/fig1.tiff', units="in", width=9, height=6.5, res=600, compression = 'lzw')
 plot(fig1)
-dev.off()
-
-ggsave("./fig1", units="in", width=9, height=7.7, dpi=600, compression = 'lzw')
+#dev.off()
 
 
 

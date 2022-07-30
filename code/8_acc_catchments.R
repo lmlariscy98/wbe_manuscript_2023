@@ -10,6 +10,7 @@ library(maps)
 library(mapdata)
 library(ggpubr)
 library(usmap)
+library(ggstatsplot)
 
 
 ###Map of USA###
@@ -33,9 +34,9 @@ usa_plot = ggplot() +
   xlab("") + 
   ylab("")
 
-tiff('./figures/usa_plot.tiff', units="in", width=4, height=5, res=600, compression = 'lzw')
+#tiff('./figures/usa_plot.tiff', units="in", width=4, height=5, res=600, compression = 'lzw')
 plot(usa_plot)
-dev.off()
+#dev.off()
 
 
   
@@ -88,7 +89,7 @@ wrf_plot = wrf_catchment %>%
   scale_fill_manual(values=c("#440154FF", "#ffcf20FF", "#2f9aa0FF"), name="Catchment \n Region") +
   geom_sf_label(data = wrf_labs_sf, aes(label = paste("WRF", wrf, sep = "")), size = 5) +
   geom_sf(data = wrf_points_sf, size = 5, color = "black") +
-  theme_bw() + 
+  theme_ggstatsplot() + 
   xlab("") + 
   ylab("")
 

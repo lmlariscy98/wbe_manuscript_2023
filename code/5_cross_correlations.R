@@ -9,7 +9,7 @@ library(ggpmisc)
 library(correlation)
 library(viridis)
 library(stringr)
-
+library(colorspace)
 
 #Load data 
 load("./data/processed_data/final_dataframe.rds")
@@ -28,7 +28,7 @@ corr.results = read_csv("./data/processed_data/corr.results.18JUNE22.csv")
 
 
 #Heat Map of Correlations
-corr.results %>%
+fig3 = corr.results %>%
   dplyr::mutate(Target = as.factor(Target), 
          Target = ordered(Target, levels = c("N1", "N2", "N1&N2"))) %>%
   dplyr::mutate(Parameter = as.factor(Parameter), 
@@ -40,12 +40,17 @@ corr.results %>%
                                        ))) %>%
   ggplot(aes(x = Target , y = Parameter, fill= rho)) + 
   geom_tile(color = "black") + 
-  scale_fill_viridis(name = "Spearman's \n Rho") + 
-  theme_bw() + 
+  scale_fill_continuous_diverging(palette = "Blue Red 2", mid = 0.4, name = "Spearman's \n Rho") + 
+  theme_ggstatsplot() + 
   facet_wrap(~Scale) + 
   geom_text(aes(x = Target, y = Parameter, label = rho)) + 
   geom_text(aes(x = Target, y = Parameter, label = Sig), nudge_y = 0.15) +
   ylab("") 
+
+#tiff('./figures/fig3.tiff', units="in", width = 7, height = 5, res=600, compression = 'lzw', pointsize = 12)
+plot(fig3)
+#dev.off()
+
   
 
 #Point Estimates +/- SD of Correlations
