@@ -1,0 +1,164 @@
+---
+title: "year_two_subsetting"
+author: "Leah Lariscy"
+date: "2023-01-30"
+output: html_document
+---
+
+# Year Two Data Subsetting
+
+## Load necessary packages
+```{r}
+library(tidyverse)
+library(downloader)
+library(magrittr)
+library(stats)
+```
+## Load Data
+### Load CFX Data
+```{r}
+# N1 CFX output
+n1 <- read_csv("data_complete/raw_data/cfx_n1.csv")
+
+# N2 CFX output
+n2 <- read_csv("data_complete/raw_data/cfx_n2.csv")
+```
+### Load Plant Data
+```{r}
+plant <- read_csv("data_complete/raw_data/plant_data.csv")
+```
+### Load BCoV Recovery Data
+```{r}
+recovery <- read_csv("data_complete/raw_data/recovery_data.csv")
+calf_guard <- read_csv("data_complete/raw_data/calfguard.csv")
+```
+### Load County Case Data
+```{r}
+#Load Symptom Date Data
+covid <- read_csv("./data/raw_data/ga_covid_data/epicurve_symptom_date.csv") %>% 
+  filter(county=="Clarke") %>% 
+  select(symptom.date=`symptom date`, 
+         cases, moving_avg_cases)
+
+#Load Confirmed Case Data
+covid.report <- read_csv("./data/raw_data/ga_covid_data/epicurve_rpt_date.csv") %>% 
+  filter(county=="Clarke") %>% 
+  select(report_date, 
+         cases, 
+         moving_avg_cases)
+
+#Load Testing Data
+covid.testing <- read_csv("./data/raw_data/ga_covid_data/pcr_antigen_col.csv") %>% 
+  filter(county=="Clarke") %>% 
+  select(collection_date = collection_dt, 
+         pcr_tests = `ALL PCR tests performed`, 
+         pcr_pos = `All PCR positive tests`, 
+         pcr_pos_7dma = `7 day percent positive`,
+         pcr_pos_14dma = `14 day percent positive`)
+
+#cases.wrf = read_csv("./data/raw_data/cases_wrf.csv") %>% 
+  #mutate(date=as.Date(date, format = "%m/%d/%Y"))
+```
+
+## Combine all qPCR data and re-label wrf names and subset year 2
+```{r}
+wbe <- bind_rows(n1, n2) %>% 
+  mutate(
+    sample_date=as.Date(sample_date, format = "%d-%b-%y"), 
+    facility=substr(sample_id, 1,2), 
+    biological_replicate=substr(sample_id, nchar(sample_id), nchar(sample_id)), 
+    ct=as.numeric(ifelse(ct=="Undetermined", NA, ct))
+  ) %>% 
+  arrange(sample_date, facility, target, biological_replicate) %>% 
+  select(sample_date, facility, target, biological_replicate, target, collection_num, ct) %>%
+  mutate(facility = as.factor(facility), facility = recode(facility, NO = "A", MI = "B", CC = "C"), facility = ordered(facility, levels = c("A", "B", "C")))
+
+#Clean environment
+rm(n1, n2)
+
+#Subset year 2 data
+wbe <- wbe %>% filter(between(sample_date, as.Date("2021-07-06") , as.Date("2022-12-21")))
+```
+
+## Clean Plant Data
+```{r}
+plant %<>% 
+  mutate(date = as.Date(date, format = "%m/%d/%Y"), influent_flow_L = influent_flow_mg*1e6*231*(0.0254^3)*1000) %>%
+  select(date, wrf, influent_flow_L, influent_tss_mg_l) %>% 
+  mutate(wrf = as.factor(wrf), wrf = recode(wrf, NO = "A", MI = "B", CC = "C"), wrf = ordered(wrf, levels = c("A", "B", "C")))
+
+plant_summary = plant %>% 
+  group_by(wrf) %>% 
+  dplyr::summarise(daily_flow_MLD = mean(influent_flow_L/1000000),
+                   daily_flow_MLD_SD = sd(influent_flow_L/1000000), 
+                   tss_mg_L = mean(influent_tss_mg_l), 
+                   tss_mg_L_SD = sd(influent_tss_mg_l))
+```
+
+## Combine All Epi Data
+```{r}
+covid <- full_join(
+  covid%>%
+    select(cases.symptom.onset=cases, date=symptom.date), 
+  covid.report%>%
+    select(cases.reported=cases, date=report_date), 
+  by = "date"
+) %>% 
+  full_join(
+    covid.testing%>%
+      rename(date=collection_date), 
+    by="date"
+  ) %>%
+  select(date, cases.symptom.onset, cases.reported, pcr_tests, pcr_pos, pcr_pos_7dma, pcr_pos_14dma) %>% 
+  full_join(cases.wrf, by = "date")
+
+#clean environment
+rm(covid.report, covid.testing)
+```
+
+## Determine Limit of Detection and Limit of Quantification on Year 2 Data
+```{r}
+#Determine the LOD and LOQ by plotting the Normal QQ-Plot
+qqnorm.ct.n1 <- qqnorm(wbe$ct[which(wbe$target=="N1")], plot.it = F) %>% as.data.frame()
+qqnorm.ct.n2 <- qqnorm(wbe$ct[which(wbe$target=="N2")], plot.it = F) %>% as.data.frame()
+
+qqnorm.Explorer.ct <- function(qqnorm.ct){
+  qqnorm.ct <- qqnorm.ct[which(complete.cases(qqnorm.ct)),]
+  qqnorm.ct <- qqnorm.ct[order(qqnorm.ct$x),]
+  qqnorm.ct <- cbind(qqnorm.ct, rbind(NA, qqnorm.ct[-nrow(qqnorm.ct),])) %>% setNames(., nm = c("x", "y", "x-1", "y-1"))
+  qqnorm.ct %<>% mutate(rise = y-`y-1`, run = x-`x-1`) %>% mutate(slope = rise / run)
+  
+  qqnorm.ct$lod <- NA
+  qqnorm.ct$loq <- NA
+  
+  prev.slope <- 1
+  lod.found <- 0
+  for(i in nrow(qqnorm.ct):2){
+    if(lod.found==0){
+      if(qqnorm.ct$slope[i]<1 & prev.slope <1){
+        qqnorm.ct$lod[i] <- 1
+        lod.found <- 1
+      }else{
+        prev.slope <- qqnorm.ct$slope[i]
+      }
+    }
+    if(lod.found==1){
+      if(qqnorm.ct$slope[i]>1){
+        qqnorm.ct$loq[i] <- 1
+        break
+      }else{
+        prev.slope <- qqnorm.ct$slope[i]
+      }
+    }
+  }
+  lod.ct <- qqnorm.ct$y[which(qqnorm.ct$lod==1)]
+  loq.ct <- qqnorm.ct$y[which(qqnorm.ct$loq==1)]
+  return(list(qqnorm.dataset = qqnorm.ct, lod = lod.ct, loq = loq.ct))
+}
+
+qqnorm.ct.n1 <- qqnorm.Explorer.ct(qqnorm.ct.n1)
+qqnorm.ct.n2 <- qqnorm.Explorer.ct(qqnorm.ct.n2)
+
+tiff(filename = "./figures/detection_limits.tiff", height = 9, width = 8, units = "in", res = 600)
+```
+

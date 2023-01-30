@@ -1,0 +1,26 @@
+{
+    "id": "FEF09153",
+    "path": "~/Desktop/MADA2023/WBE_manuscript_2023/wbe_manuscript_2023_LML/code/1_processing_script.R",
+    "project_path": "code/1_processing_script.R",
+    "type": "r_source",
+    "hash": "3497218776",
+    "contents": "",
+    "dirty": false,
+    "created": 1675108918357.0,
+    "source_on_save": false,
+    "relative_order": 3,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "259,70",
+        "scrollLine": "225"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1675114574,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1675114574652,
+    "read_only": false,
+    "read_only_alternatives": []
+}
