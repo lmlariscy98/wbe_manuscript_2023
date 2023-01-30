@@ -1,0 +1,18 @@
+---
+title: "year_two_subsetting"
+author: "Leah Lariscy"
+date: "2023-01-30"
+output: html_document
+---
+#Year Two Data Subsetting
+
+##Load all necessary packages
+```{r}
+library(tidyverse)
+```
+
+##Load all data frames
+```{r}
+n1 <- read_csv("/")
+```
+

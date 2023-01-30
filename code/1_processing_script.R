@@ -266,7 +266,7 @@ qqnorm.ct.n1 <- qqnorm.Explorer.ct(qqnorm.ct.n1)
 qqnorm.ct.n2 <- qqnorm.Explorer.ct(qqnorm.ct.n2)
 
 
-#tiff(filename = "./figures/detection_limits.tiff", height = 9, width = 8, units = "in", res = 600)
+# tiff(filename = "./figures/detection_limits.tiff", height = 9, width = 8, units = "in", res = 600)
 
 
 par(mfcol = c(2,1), mar = c(2.1, 2.1, 1.1, 0))
