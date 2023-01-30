@@ -1,0 +1,4 @@
+"0","plant %<>% "
+"0","  mutate(date = as.Date(date, format = ""%m/%d/%Y""), influent_flow_L = influent_flow_mg*1e6*231*(0.0254^3)*1000) %>%"
+"0","  select(date, wrf, influent_flow_L, influent_tss_mg_l) %>% "
+"0","  mutate(wrf = as.factor(wrf), wrf = recode(wrf, NO = ""A"", MI = ""B"", CC = ""C""), wrf = ordered(wrf, levels = c(""A"", ""B"", ""C"")))"
