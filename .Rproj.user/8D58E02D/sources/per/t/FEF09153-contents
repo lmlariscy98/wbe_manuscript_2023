@@ -116,7 +116,7 @@ sf_plot = sf %>% ggplot(aes(x = sample_date, y = n.bio)) +
   xlab("Sample Date") + 
   theme_bw()
 
-tiff('./figures/sampling_frequency.tiff', units="in", width=9, height=6.5, res=600, compression = 'lzw')
+tiff('figures/LML/sampling_frequency.tiff', units="in", width=9, height=6.5, res=600, compression = 'lzw')
 plot(sf_plot)
 dev.off()
 
@@ -133,8 +133,6 @@ wbe.summary.tr <- wbe %>%
   ungroup() %>% 
   mutate(n.pos = n - n.miss) %>% 
   mutate(pos = ifelse(n.pos > 0, "pos", "neg"))
-
-
 
 
 #Calculate the number of extraction (biological) replicates that are positive/negative
