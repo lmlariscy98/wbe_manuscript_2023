@@ -59,6 +59,7 @@ wbe <- bind_rows(n1, n2) %>%
   arrange(sample_date, facility, target, biological_replicate) %>% 
   select(sample_date, facility, target, biological_replicate, target, collection_num, ct) %>%
   mutate(facility = as.factor(facility), facility = recode(facility, NO = "A", MI = "B", CC = "C"), facility = ordered(facility, levels = c("A", "B", "C")))
+
   
 
 #Clean environment
