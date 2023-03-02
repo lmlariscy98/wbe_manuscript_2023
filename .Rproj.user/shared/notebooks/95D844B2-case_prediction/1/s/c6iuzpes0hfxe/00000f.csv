@@ -1,0 +1,1 @@
+"0","prediction <- wbe_plant_join_avg %>% mutate(predicted_cases = (flow_L_avg*copy_num_L)/(128*4.7*10^7))"

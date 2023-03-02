@@ -1,0 +1,2 @@
+"0","wbe_plant_join_avg <- wbe_plant_join %>% group_by(collection_num,date) %>% summarize(copy_num_uL_rxn = mean(copy_num_uL_rxn), flow_L_avg = mean(influent_flow_L)) %>% mutate(copy_num_L = copy_num_uL_rxn*20/5*60/280*1000*1000) %>% ungroup()"
+"2","`summarise()` has grouped output by 'collection_num'. You can override using the `.groups` argument."

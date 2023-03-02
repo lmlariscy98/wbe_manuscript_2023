@@ -1,0 +1,4 @@
+"0","wbe_plant_join <- full_join(x = wbe_clean, y = plant) %>% "
+"0","  mutate(ct= replace_na(data = ct, replace = 39.93763483)) %>% "
+"0","  mutate(copy_num_uL_rxn = as.numeric(10^((ct-36.046)/-3.5293))) "
+"2","Joining, by = c(""date"", ""wrf"")"

@@ -1,0 +1,76 @@
+---
+title: "Predicting cases from viral levels"
+author: "Leah Lariscy"
+date: "2023-02-06"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+```
+
+## Clean `wbe` (rename `sample_date` to `date`, `facility` to `wrf`,select(c(date, facility, target, collection_num, ct)))
+```{r}
+wbe_clean <- wbe %>% rename("date" = sample_date, "wrf" = facility) %>% select(c(date, wrf, target, collection_num, ct))
+```
+
+## Combine `wbe_clean` with `plant` by `date, wrf`and then calculate viral copies per liter
+```{r}
+wbe_plant_join <- full_join(x = wbe_clean, y = plant) %>% 
+  mutate(ct= replace_na(data = ct, replace = 39.93763483)) %>% 
+  mutate(copy_num_uL_rxn = as.numeric(10^((ct-36.046)/-3.5293))) 
+```
+## Average replicates and calculate copies per L
+```{r}
+wbe_plant_join_avg <- wbe_plant_join %>% group_by(collection_num,date) %>% summarize(copy_num_uL_rxn = mean(copy_num_uL_rxn), flow_L_avg = mean(influent_flow_L)) %>% mutate(copy_num_L = copy_num_uL_rxn*20/5*60/280*1000*1000) %>% ungroup()
+```
+
+## Predict cases using the following model
+#### Jt = Q x V / A x B
+where Jt = number of infected individuals in a sewershed in a given 24 hour period
+      Q = average flow rate at the WRF (liters per day) for a 24 hour period
+      V = viral copies per L
+      A = rate of feces production per person (grams per day, = 128g)
+      B = maximum rate at which virus is shed (RNA copies per gram of feces per day, = 4.7*10^7)
+      Q x V = viral copies per day in wastewater influent
+      A x B = viral copies per person per day (cp/person/day)
+```{r}
+prediction <- wbe_plant_join_avg %>% mutate(predicted_cases = (flow_L_avg*copy_num_L)/(128*4.7*10^7))
+```
+      
+```{r}
+prediction_compare <- full_join(prediction, covid) %>% mutate(cases_estimate = cases.symptom.onset*15, 
+prediction_ratio = predicted_cases/cases.symptom.onset,
+symptom_norm_median = cases.symptom.onset*28) %>% 
+  select(!c(cases_A, cases_B, cases_C)) %>% remove_missing() %>% filter(prediction_ratio != "Inf") 
+```
+```{r}
+prediction_compare %>% ggplot(aes(y=prediction_ratio)) +
+  geom_histogram()
+summary(prediction_compare$prediction_ratio)
+```
+
+```{r}
+prediction_compare %>% ggplot(aes(log10(cases.symptom.onset), prediction_ratio)) +
+  geom_point() +
+  geom_smooth()
+```
+
+```{r}
+prediction_compare %>% ggplot(aes(date,symptom_norm_median)) +
+  geom_point()
+prediction_compare %>% ggplot(aes(date, copy_num_L*flow_L_avg)) +
+  geom_point()
+prediction_compare %>% ggplot(aes(date, )) +
+  geom_point()
+```
+
+```{r}
+ MC.COVID19.wastewater(Sim = 50, Tm = 365, beta.s = 0.05, gamma.e = 0.2, gamma.i = 0.1,
+                      p = 0.01, N = 25,000, mu.V.max = 7.6, sd.V.max = 0.8,
+                      mu.V.20 = 3.5, sd.V.20 = 0.35, T.V.max = 5, Ts = 60,
+                      Temp = 48, mu.tau0 = 10, sd.tau0 = 1, mu.Q = 2.5, 
+                      sd.Q = 0.15, G.mean = 128, G.sd = 13) 
+plot.func(Tm = 365, beta.s = 0.05, gamma.e = 0.2, gamma.i = 0.1, p = 0.01, Y = prediction_compare$cases.reported, X = prediction_compare$copy_num_L)
+```
+

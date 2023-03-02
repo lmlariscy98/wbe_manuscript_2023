@@ -1,0 +1,5 @@
+"0","plot.func(Tm = 365, beta.s = 0.05, gamma.e = 0.2, gamma.i = 0.1, p = 0.01, Y = prediction_compare$cases.reported, X = prediction_compare$copy_num_L)
+"
+"2","Error in quantile.default(X, 0.975) : 
+  missing values and NaN's not allowed if 'na.rm' is FALSE
+"

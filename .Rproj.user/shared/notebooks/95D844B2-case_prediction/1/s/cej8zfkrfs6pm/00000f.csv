@@ -1,0 +1,6 @@
+"0","prediction_compare <- full_join(prediction, covid) %>% mutate(cases_estimate = cases.symptom.onset*15, "
+"0","prediction_ratio = predicted_cases/cases.symptom.onset,"
+"0","symptom_norm_median = cases.symptom.onset*28) %>% "
+"0","  select(!c(cases_A, cases_B, cases_C)) %>% remove_missing() %>% filter(prediction_ratio != ""Inf"") "
+"2","Joining, by = ""date"""
+"2","Warning: [38;5;254mRemoved 958 rows containing missing values.[39m"

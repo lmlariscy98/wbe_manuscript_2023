@@ -1,0 +1,3 @@
+"0","prediction_compare %>% ggplot(aes(log10(cases.symptom.onset), prediction_ratio)) +"
+"0","  geom_point() +"
+"0","  geom_smooth()"
